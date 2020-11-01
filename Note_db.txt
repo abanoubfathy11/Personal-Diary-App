@@ -1,0 +1,237 @@
+Drop table Users cascade constraints;
+Drop table Phone cascade constraints;
+Drop table Reminder cascade constraints;
+Drop table BN_BankAccount cascade constraints;
+Drop table DoList cascade constraints;
+Drop table BN_Phones cascade constraints;
+Drop table BN_Addresses cascade constraints;
+Drop table BN_Emails cascade constraints;
+Drop table Bussines_note cascade constraints;
+Drop table Note cascade constraints;
+
+Create table Users
+(user_id number(5) primary key,
+ user_name varchar2 (255),
+ user_email varchar2 (255)unique, 
+ user_pass varchar2 (255),
+ bdata DATE
+ );
+ 
+ CREATE TABLE Phone(
+    phone number(11) ,
+    userid number(5) references Users(user_id),
+    primary key(phone,userid)
+);
+CREATE TABLE Reminder(
+    rem_id number(5),
+    rem_name varchar2(255),
+    TEXT VARCHAR2(255),
+    image VARCHAR2(255),
+    rem_data DATE,
+    userid number(5)REFERENCES Users(user_id),
+    PRIMARY KEY(rem_id)
+); 
+
+CREATE TABLE Note(
+    note_id number(5),
+    TEXT VARCHAR2(255),
+    edit_date DATE,
+    image VARCHAR2(255),
+    insert_date DATE,
+    userid number(5) REFERENCES Users(user_id),
+    PRIMARY KEY(note_id)
+); 
+
+CREATE TABLE Bussines_note(
+    bn_id number(5),
+    massage VARCHAR2(255),
+    bnname VARCHAR2(255),
+    userid number(5) REFERENCES Users(user_id),
+    ID number(14),
+    PRIMARY KEY(bn_id)
+);
+
+ CREATE TABLE BN_Emails(
+    email VARCHAR2(255),
+    bnid number(5) REFERENCES Bussines_note(bn_id),
+    PRIMARY KEY(bnid, email)
+); 
+
+CREATE TABLE BN_Addresses(
+    Address VARCHAR2(255),
+    bnid number(5) REFERENCES Bussines_note(bn_id),
+    PRIMARY KEY(bnid, Address)
+);
+
+ CREATE TABLE BN_Phones(
+    phone number(11),
+    bnid number(5) REFERENCES Bussines_note(bn_id),
+    PRIMARY KEY(bnid, phone)
+);
+
+ CREATE TABLE BN_BankAccount(
+    BankAccount number(38),
+    bnid number(5) REFERENCES Bussines_note(bn_id),
+    PRIMARY KEY(bnid, BankAccount)
+);
+
+ CREATE TABLE DoList(
+    DL_id number(5) PRIMARY KEY,
+    TDTime VARCHAR2(255),
+    massage VARCHAR2(255),
+    Done VARCHAR2(15),
+    userid number(5) REFERENCES Users(user_id)
+);
+
+
+INSERT INTO users VALUES (1,'ahmad','ahmad@gmail.com',12345,'22-Dec-2002');
+INSERT INTO users VALUES (2,'enas','enas@gmail.com',12345,'22-Dec-2002');
+INSERT INTO users VALUES (3,'abanoub','abanoub@gmail.com',12345,'22-Dec-2002');
+INSERT INTO users VALUES (4,'eslam','eslam@gmail.com',12345,'22-Dec-2002');
+INSERT INTO users VALUES (5,'mayar','mayar@gmail.com',12345,'22-Dec-2002');
+
+INSERT INTO phone VALUES (01234567899,1);
+INSERT INTO phone VALUES (01234567898,1);
+INSERT INTO phone VALUES (01234567899,2);
+INSERT INTO phone VALUES (01234567898,2);
+INSERT INTO phone VALUES (01234567899,3);
+INSERT INTO phone VALUES (01234567898,3);
+INSERT INTO phone VALUES (01234567899,4);
+INSERT INTO phone VALUES (01234567898,4);
+INSERT INTO phone VALUES (01234567899,5);
+INSERT INTO phone VALUES (01234567898,5);
+
+
+insert into Reminder VALUES (1,'hi1','say hi to me','source of photo','22-Dec-2002',1);
+insert into Reminder VALUES (2,'hi2','say hello to me','source of photo','22-Dec-2002',2);
+insert into Reminder VALUES (3,'hi3','dont say hi to me','source of photo','22-Dec-2002',3);
+insert into Reminder VALUES (4,'hi4','eskot','source of photo','22-Dec-2002',4);
+insert into Reminder VALUES (5,'hi5','mtskot4','source of photo','22-Dec-2002',5);
+
+
+insert into note VALUES (1,'this is my note :D','22-Dec-2002','source','22-Dec-2002',1);
+insert into note VALUES (2,'this is my note :D','22-Dec-2002','source','22-Dec-2002',2);
+insert into note VALUES (3,'this is my note :D','22-Dec-2002','source','22-Dec-2002',3);
+insert into note VALUES (4,'this is my note :D','22-Dec-2002','source','22-Dec-2002',4);
+
+
+insert into bussines_note VALUES (1,'meetting at company','22-Dec-2002','ali',1,123456789);
+insert into bussines_note VALUES (2,'meetting at home','22-Dec-2002','hany',1,123456789);
+insert into bussines_note VALUES (3,'meetting at offiice','22-Dec-2002','ahmad',2,123456789);
+insert into bussines_note VALUES (4,'meetting at company','22-Dec-2002','toka',3,123456789);
+
+
+insert into bn_emails VALUES('ali_1@gmail.com',1);
+insert into bn_emails VALUES('ali_2@gmail.com',1);
+insert into bn_emails VALUES('ahmad_1@gmail.com',2);
+insert into bn_emails VALUES('ahmad_2@gmail.com',2);
+insert into bn_emails VALUES('toka_1@gmail.com',3);
+insert into bn_emails VALUES('toka_2@gmail.com',3);
+
+
+insert into bn_addresses VALUES('nasr city',1);
+insert into bn_addresses VALUES('shoubra',1);
+insert into bn_addresses VALUES('abbasiya',2);
+insert into bn_addresses VALUES('down town',3);
+
+
+
+insert into bn_phones VALUES(01234567893,1);
+insert into bn_phones VALUES(01234567893,2);
+insert into bn_phones VALUES(01234567893,3);
+insert into bn_phones VALUES(01234567895,1);
+insert into bn_phones VALUES(01234567892,2);
+insert into bn_phones VALUES(01234567896,3);
+
+insert into dolist VALUES(1,'22-Dec-2002','shopping','22-Dec-2002',1);
+insert into dolist VALUES(2,'22-Dec-2002','playing','22-Dec-2002',2);
+insert into dolist VALUES(3,'22-Dec-2002','shopping','22-Dec-2002',3);
+
+
+create or replace procedure  CreateBussinesNote
+(bn_idd in NUMBER,massagee VARCHAR2 ,bnnamee in VARCHAR2 ,useridd in NUMBER,idd in NUMBER )
+as
+begin
+insert into bussines_note values (bn_idd,massagee,bnnamee,useridd,idd);
+end;
+
+create or replace procedure  DeleteBussinesNote
+(nid in NUMBER )
+as
+begin
+delete from bn_addresses where bnid=nid;
+delete from bn_bankaccount where bnid=nid;
+delete from bn_emails where bnid= nid;
+delete from bn_phones where bnid= nid;
+delete from bussines_note where bn_id= nid;
+
+end;
+
+create or replace PROCEDURE DELETING_PROC( id_proc IN NUMBER , note_delete in NUMBER 
+) AS
+BEGIN
+
+  delete from NOTE 
+  where userid= id_proc
+  and note_id =note_delete; 
+ 
+END DELETING_PROC;
+
+create or replace procedure GetBNID
+(RID out number)
+as
+begin
+select max(bn_id)
+into RID
+from bussines_note;
+end;
+
+create or replace PROCEDURE GETIDNOW ( var OUT NUMBER,text_now IN  VARCHAR2)
+AS
+BEGIN
+SELECT NOTE_ID
+INTO var
+from note
+where text= text_now;
+
+ 
+END GETIDNOW;
+
+create or replace PROCEDURE GETNOTID(not_id_new_2 out NUMBER)
+AS
+BEGIN
+select max(NOTE_ID) 
+INTO not_id_new_2 
+FROM NOTE
+;
+  
+END;
+
+create or replace procedure GetPhonesUser
+(iid in number,ph out sys_refcursor)
+as
+begin
+open ph for
+select phone
+from phone
+where userid = iid;
+end;
+
+create or replace procedure GetRemID
+(RID out number)
+as
+begin
+select max(rem_id)
+into RID
+from reminder;
+end;
+
+create or replace procedure  UpadetBussinesNote
+(massagee VARCHAR2 ,bnnamee in VARCHAR2,idd in NUMBER,bnid in NUMBER)
+as
+begin
+  update bussines_note set  massage= massagee, bnname= bnnamee , id= idd where bn_id= bnid;
+end;
+
+
+commit;
